@@ -1,0 +1,12 @@
+apiVersion: speedscale.com/v1
+kind: TrafficReplay
+metadata:
+  name: replay-REPLAY_NAME
+spec:
+  buildTag: BUILD_TAG
+  snapshotID: SNAPSHOT_ID
+  testConfigID: TEST_CONFIG_ID
+  workloadRef:
+    kind: Deployment
+    name: WORKLOAD_NAME
+  cleanup: inventory
