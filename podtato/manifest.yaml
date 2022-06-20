@@ -1,0 +1,300 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-entry
+  namespace: default
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    matchLabels:
+      component: podtato-head-entry
+  template:
+    metadata:
+      labels:
+        component: podtato-head-entry
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+      - name: server
+        image: ghcr.io/speedscale/podtato-head/entry:0.2.7
+        imagePullPolicy: IfNotPresent
+        # ports:
+        # - containerPort: 31000
+        # env:
+        # - name: PODTATO_PORT
+        #   value: "31000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: podtato-head-entry
+  namespace: default
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    component: podtato-head-entry
+  ports:
+  - name: http
+    port: 9000
+    targetPort: 9000
+    protocol: TCP
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-hat
+  namespace: default
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    matchLabels:
+      component: podtato-head-hat
+  template:
+    metadata:
+      labels:
+        component: podtato-head-hat
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: server
+          image:  ghcr.io/speedscale/podtato-head/hat:0.2.7
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9000
+          env:
+            - name: PODTATO_PORT
+              value: "9000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: podtato-head-hat
+  namespace: default
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    component: podtato-head-hat
+  ports:
+    - name: http
+      port: 9001
+      protocol: TCP
+      targetPort: 9000
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-left-leg
+  namespace: default
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    matchLabels:
+      component: podtato-head-left-leg
+  template:
+    metadata:
+      labels:
+        component: podtato-head-left-leg
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: server
+          image:  ghcr.io/speedscale/podtato-head/left-leg:0.2.7
+
+          ports:
+            - containerPort: 9000
+          env:
+            - name: PODTATO_PORT
+              value: "9000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: podtato-head-left-leg
+  namespace: default
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    component: podtato-head-left-leg
+  ports:
+    - name: http
+      port: 9002
+      protocol: TCP
+      targetPort: 9000
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-left-arm
+  namespace: default
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    matchLabels:
+      component: podtato-head-left-arm
+  template:
+    metadata:
+      labels:
+        component: podtato-head-left-arm
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: server
+          image:  ghcr.io/speedscale/podtato-head/left-arm:0.2.7
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9000
+          env:
+            - name: PODTATO_PORT
+              value: "9000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: podtato-head-left-arm
+  namespace: default
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    component: podtato-head-left-arm
+  ports:
+    - name: http
+      port: 9003
+      protocol: TCP
+      targetPort: 9000
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-right-leg
+  namespace: default
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    matchLabels:
+      component: podtato-head-right-leg
+  template:
+    metadata:
+      labels:
+        component: podtato-head-right-leg
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: server
+          image:  ghcr.io/speedscale/podtato-head/right-leg:0.2.7
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9000
+          env:
+            - name: PODTATO_PORT
+              value: "9000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: podtato-head-right-leg
+  namespace: default
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    component: podtato-head-right-leg
+  ports:
+    - name: http
+      port: 9004
+      protocol: TCP
+      targetPort: 9000
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-right-arm
+  namespace: default
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    matchLabels:
+      component: podtato-head-right-arm
+  template:
+    metadata:
+      labels:
+        component: podtato-head-right-arm
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: server
+          image:  ghcr.io/speedscale/podtato-head/right-arm:0.2.7
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9000
+          env:
+            - name: PODTATO_PORT
+              value: "9000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: podtato-head-right-arm
+  namespace: default
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    component: podtato-head-right-arm
+  ports:
+    - name: http
+      port: 9005
+      protocol: TCP
+      targetPort: 9000
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-curl
+spec:
+  selector:
+    matchLabels:
+      app: curl
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: curl
+    spec:
+      containers:
+      - name: curl
+        image: curlimages/curl
+        command: 
+          - sh
+          - -c
+          - |
+              /bin/sh <<'EOF'
+              while true; do
+                echo "$(date) Start curls"
+                curl -s -o /dev/null http://podtato-head-entry:9000
+                curl -s -o /dev/null http://podtato-head-entry:9000/assets/images/body/body.svg
+                curl -s -o /dev/null http://podtato-head-entry:9000/parts/hat/hat.svg
+                curl -s -o /dev/null http://podtato-head-entry:9000/parts/left-arm/left-arm.svg
+                curl -s -o /dev/null http://podtato-head-entry:9000/parts/right-arm/right-arm.svg
+                curl -s -o /dev/null http://podtato-head-entry:9000/parts/left-leg/left-leg.svg
+                curl -s -o /dev/null http://podtato-head-entry:9000/parts/right-leg/right-leg.svg
+                echo "$(date) End curls, time to sleep"
+                sleep $((RANDOM % 15))
+              done
+              EOF
