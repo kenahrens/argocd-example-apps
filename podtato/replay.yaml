@@ -1,0 +1,11 @@
+apiVersion: speedscale.com/v1
+kind: TrafficReplay
+metadata:
+  name: test-3
+spec:
+  testConfigID: performance_10replicas
+  snapshotID: ced8c29a-2605-41bf-ab9d-5f8ac0e1d8e5
+  workloadRef:
+    kind: Deployment
+    name: podtato-head-entry
+  cleanup: inventory
