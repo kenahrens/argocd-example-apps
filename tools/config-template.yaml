@@ -1,0 +1,17 @@
+current-context: my-context
+contexts:
+- name: my-context
+  kind: enterprise
+  loglevel: info
+  container-registry: gcr.io/speedscale
+  tenant: speedscale
+  app-url: app.speedscale.com
+tenants:
+- id: TENANT_ID
+  name: TENANT_NAME
+  bucket: TENANT_BUCKET
+  region: us-east-1
+  apikey: TENANT_API_KEY
+  stream: TENANT_STREAM
+preferences:
+  update_policy: prompt
