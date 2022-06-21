@@ -7,15 +7,36 @@ to explore ArgoCD and GitOps!
 | Application | Description |
 |-------------|-------------|
 | [guestbook](guestbook/) | A hello word guestbook app as plain YAML |
-| [ksonnet-guestbook](ksonnet-guestbook/) | The guestbook app as a ksonnet app |
-| [helm-guestbook](helm-guestbook/) | The guestbook app as a Helm chart |
-| [jsonnet-guestbook](jsonnet-guestbook/) | The guestbook app as a raw jsonnet |
-| [jsonnet-guestbook-tla](jsonnet-guestbook-tla/) | The guestbook app as a raw jsonnet with support for top level arguments |
-| [kustomize-guestbook](kustomize-guestbook/) | The guestbook app as a Kustomize 2 app |
-| [pre-post-sync](pre-post-sync/) | Demonstrates Argo CD PreSync and PostSync hooks |
-| [sync-waves](sync-waves/) | Demonstrates Argo CD sync waves with hooks |
-| [helm-dependency](helm-dependency/) | Demonstrates how to customize an OTS (off-the-shelf) helm chart from an upstream repo |
-| [sock-shop](sock-shop/) | A microservices demo app (https://microservices-demo.github.io) |
-| [plugins](plugins/) | Apps which demonstrate config management plugins usage |
-| [blue-green](blue-green/) | Demonstrates how to implement blue-green deployment using [Argo Rollouts](https://github.com/argoproj/argo-rollouts)
-| [apps](apps/) | An app composed of other apps |
+| [podtato](podtato/) | CNCF example app as plain YAML |
+
+## Tools
+
+The create-replay shell script can be used to run a replay on a workload and sync with argo.
+
+```
+./tools/create-replay.sh /
+  DEST_DIR /
+  WORKLOAD_NAME /
+  SNAPSHOT_ID /
+  BUILD_TAG /
+  TEST_CONFIG_ID /
+  REPLAY_NAME
+```
+
+These are the values:
+* DEST_DIR - where you want to create the traffic replay CR
+* WORKLOAD_NAME - what workload does the traffic replay run against
+* SNAPSHOT_ID - what traffic snapshot to use
+* BUILD_TAG - what build hash to use (will use epoch if not supplied)
+* TEST_CONFIG_ID - what test config to use (will use standard if not supplied)
+* REPLAY_NAME - what replay name to use (will use $BUILD_TAG if not supplied)
+
+### Deploy podtato
+
+```
+argocd app create podtato \
+--repo https://github.com/kenahrens/argocd-example-apps.git \
+--path podtato \
+--dest-server https://kubernetes.default.svc \
+--dest-namespace default
+```

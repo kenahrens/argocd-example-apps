@@ -12,7 +12,7 @@ SNAPSHOT_ID="${3}"
 EPOCH=$(date +%s)
 BUILD_TAG="${4:-$EPOCH}"
 TEST_CONFIG_ID="${5:-standard}"
-REPLAY_NAME="${6:-$EPOCH}"
+REPLAY_NAME="${6:-$BUILD_TAG}"
 
 # Start doing substitutions
 DEST_FILE=${DEST_DIR}/replay-${REPLAY_NAME}.yaml
@@ -49,9 +49,9 @@ STATUS=$(echo $REPORT | jq .report.status)
 echo "Traffic Replay Status: $STATUS"
 
 # Cleanup the traffic replay CR
-git rm $DEST_FILE
-git commit -m "Cleaning up $DEST_FILE"
-git push origin master
+# git rm $DEST_FILE
+# git commit -m "Cleaning up $DEST_FILE"
+# git push origin master
 
 # Sync it with argo to clean up
-argocd app sync podtato --prune
+# argocd app sync podtato --prune
