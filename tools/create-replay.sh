@@ -46,6 +46,7 @@ argocd app sync podtato
 REPORT_ID=$(speedctl wait report --tag $BUILD_TAG --id-only --timeout 10m)
 REPORT=$(speedctl get report $REPORT_ID)
 STATUS=$(echo $REPORT | jq .report.status)
+echo "Report: https://app.speedscale.com/report/${REPORT_ID}"
 echo "Traffic Replay Status: $STATUS"
 
 # Cleanup the traffic replay CR
