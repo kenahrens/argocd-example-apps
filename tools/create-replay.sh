@@ -40,19 +40,27 @@ git commit -m "Adding $DEST_FILE"
 git push origin master
 
 # Sync it with argo
-argocd app sync podtato
+argocd app sync podtato --prune
 
 # Wait until the report is complete
 REPORT_ID=$(speedctl wait report --tag $BUILD_TAG --id-only --timeout 10m)
 REPORT=$(speedctl get report $REPORT_ID)
-STATUS=$(echo $REPORT | jq .report.status)
-echo "Report: https://app.speedscale.com/report/${REPORT_ID}"
-echo "Traffic Replay Status: $STATUS"
 
 # Cleanup the traffic replay CR
-# git rm $DEST_FILE
-# git commit -m "Cleaning up $DEST_FILE"
-# git push origin master
+git rm $DEST_FILE
+git commit -m "Cleaning up $DEST_FILE"
+git push origin master
 
-# Sync it with argo to clean up
-# argocd app sync podtato --prune
+# Sync it with argo (again)
+argocd app sync podtato --prune
+
+# Print the results
+echo "Report: https://app.speedscale.com/report/${REPORT_ID}"
+
+SUCCESS=$(echo $REPORT | jq -c '.report.aggregates[] | select(.name | contains("passAssertPct")) | .gaugeVal.val')
+AVG_LATENCY=$(echo $REPORT | jq -c '.report.aggregates[] | select(.name | contains("avgLatency")) | .gaugeVal.val')
+STATUS=$(echo $REPORT | jq .report.status)
+
+echo "Success Rate:           ${SUCCESS}%"
+echo "Average Latency:        ${AVG_LATENCY}ms"
+echo "Traffic Replay Status:  $STATUS"

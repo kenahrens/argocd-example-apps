@@ -56,5 +56,8 @@ As it's running you will see it creates the CR, checks it in and syncs argo, and
 
 ```
 ...
-
+Report: https://app.speedscale.com/report/f8e765a8-ba55-4aa4-ab80-f1a4f8906524
+Success Rate:           100%
+Average Latency:        2.572151898734177ms
+Traffic Replay Status:  "Passed"
 ```
