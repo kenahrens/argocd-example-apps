@@ -42,10 +42,16 @@ git push origin master
 # Sync it with argo
 argocd app sync podtato
 
-# Check it with speedctl
-# speedctl get report 
+# Wait until the report is complete
+REPORT_ID=$(speedctl wait report --tag $BUILD_TAG --id-only --timeout 10m)
+REPORT=$(speedctl get report $REPORT_ID)
+STATUS=$(echo $REPORT | jq .report.status)
+echo "Traffic Replay Status: $STATUS"
 
 # Cleanup the traffic replay CR
-# git rm $DEST_FILE
-# git commit -m "Cleaning up $DEST_FILE"
-# git push origin master
+git rm $DEST_FILE
+git commit -m "Cleaning up $DEST_FILE"
+git push origin master
+
+# Sync it with argo to clean up
+argocd app sync podtato --prune

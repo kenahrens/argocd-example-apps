@@ -3,7 +3,7 @@ kind: TrafficReplay
 metadata:
   name: replay-REPLAY_NAME
 spec:
-  buildTag: BUILD_TAG
+  buildTag: "BUILD_TAG"
   snapshotID: SNAPSHOT_ID
   testConfigID: TEST_CONFIG_ID
   workloadRef:
