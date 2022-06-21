@@ -15,12 +15,12 @@ The create-replay shell script can be used to run a replay on a workload and syn
 
 ```
 ./tools/create-replay.sh \
-  DEST_DIR \
-  WORKLOAD_NAME \
-  SNAPSHOT_ID \
-  BUILD_TAG \
-  TEST_CONFIG_ID \
-  REPLAY_NAME
+  --dest-dir DEST_DIR \
+  --workload-name WORKLOAD_NAME \
+  --snapshot-id SNAPSHOT_ID \
+  --test-config-id TEST_CONFIG_ID \
+  --build-tag BUILD_TAG \
+  --replay-name REPLAY_NAME
 ```
 
 These are the values:
@@ -47,9 +47,9 @@ How to run a replay:
 
 ```
 ./tools/create-replay.sh \
-  podtato \
-  podtato-head-entry \
-  41a06065-ec28-438a-b9f4-0e976c6f64ca
+  --dest-dir podtato \
+  --workload-name podtato-head-entry \
+  --snapshot-id 41a06065-ec28-438a-b9f4-0e976c6f64ca
 ```
 
 As it's running you will see it creates the CR, checks it in and syncs argo, and then waits for the test report to be complete. You should see it print this kind of output at the end:
