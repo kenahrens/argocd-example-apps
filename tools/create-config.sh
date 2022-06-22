@@ -12,5 +12,3 @@ cat ${BASE_DIR}/config-template.yaml | sed \
   -e "s/TENANT_API_KEY/${TENANT_API_KEY}/" \
   -e "s/TENANT_STREAM/${TENANT_STREAM}/"
   > ~/.speedscale/config.yaml
-
-sh -c "$(curl -sL https://downloads.speedscale.com/speedctl/install)"
