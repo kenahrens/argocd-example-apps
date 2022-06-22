@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: WORKLOAD_NAME
+  namespace: WORKLOAD_NS
+  annotations:
+    replay.speedscale.com/snapshot-id: "SNAPSHOT_ID"
+    replay.speedscale.com/testconfig-id: "TEST_CONFIG_ID"
+    replay.speedscale.com/cleanup: "inventory"
+    replay.speedscale.com/build-tag: "BUILD_TAG"

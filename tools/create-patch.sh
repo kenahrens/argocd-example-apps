@@ -7,25 +7,21 @@ function Usage() {
 ##### Create & run traffic replay for an app using ArgoCD
 
 Required arguments:
-    -d | --dest-dir          A path where traffic replay manifest should
-                             be added to
+    -d | --dest-dir          A path where traffic replay manifest should be added to
     -w | --workload-name     A name of the workload to run replay for
     -s | --snapshot-id       Traffic snapshot identifier
 
 Optional arguments:
-    -t | --test-config-id    Test config id to be used with the replay. Defaults
-                             to standard
-    -b | --build-tag         A build tag to be used with the replay, e.g. CI job
-                             identifier or git commit hash
-    -n | --replay-name       A name of the replay to be created. Defaults to
-                             build tag
+    -t | --test-config-id    Test config id to be used with the replay. Defaults to standard
+    -b | --build-tag         A build tag to be used with the replay, e.g. CI job identifier or git commit hash
+    -n | --namespace         The namespace where the workload exists. Defaults to default
     -h | --help              Show this message and exit
 
 Requirements:
     speedctl:                Speedscale CLI https://speedscale.com/cli-download/
 
 Example:
-    create-replay.sh \\
+    create-patch.sh \\
         -d podtato \\
         -w podtato-head-entry \\
         -s 41a06065-ec28-438a-b9f4-0e976c6f64ca
@@ -69,8 +65,8 @@ while [[ $# -gt 0 ]]; do
         TEST_CONFIG_ID="${2}"
         shift
         ;;
-    -n|--name)
-        REPLAY_NAME="${2}"
+    -n|--namespace)
+        WORKLOAD_NS="${2}"
         shift
         ;;
     -h|--help)
@@ -85,7 +81,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 BASE_DIR="$(dirname ${BASH_SOURCE[0]})"
-SRC_FILE=${BASE_DIR}/template-replay.yaml
+SRC_FILE=${BASE_DIR}/template-patch.yaml
 
 # validate input
 if [[ -z ${DEST_DIR} ]]; then
@@ -107,47 +103,37 @@ fi
 EPOCH=$(date +%s)
 BUILD_TAG=${BUILD_TAG:-$EPOCH}
 TEST_CONFIG_ID="${TEST_CONFIG_ID:-standard}"
-REPLAY_NAME="${REPLAY_NAME:-$BUILD_TAG}"
+WORKLOAD_NS="${WORKLOAD_NS:-default}"
 
 # Start doing substitutions
-DEST_FILE=${DEST_DIR}/replay-${REPLAY_NAME}.yaml
+DEST_FILE=${DEST_DIR}/patch-${BUILD_TAG}.yaml
 
-echo "Creating trafficreplay CR from template "
+echo "Creating patch from template "
 echo "Source:      $SRC_FILE"
 echo "Dest:        $DEST_FILE"
 echo "Workload:    $WORKLOAD_NAME"
+echo "Namespace:   $WORKLOAD_NS"
 echo "Snapshot:    $SNAPSHOT_ID"
 echo "Build Tag:   $BUILD_TAG"
 echo "Test Config: $TEST_CONFIG_ID"
-echo "Replay Name: $REPLAY_NAME"
 
 cat ${SRC_FILE} | sed \
   -e "s/WORKLOAD_NAME/${WORKLOAD_NAME}/" \
+  -e "s/WORKLOAD_NS/${WORKLOAD_NS}/" \
   -e "s/SNAPSHOT_ID/${SNAPSHOT_ID}/" \
   -e "s/BUILD_TAG/${BUILD_TAG}/" \
   -e "s/TEST_CONFIG_ID/${TEST_CONFIG_ID}/" \
-  -e "s/REPLAY_NAME/${REPLAY_NAME}/" \
   > $DEST_FILE
 
-# # Add to git
-git add $DEST_FILE
-git commit -m "Adding $DEST_FILE"
-git push origin master
-
-# Sync it with argo
-argocd app sync podtato --prune
+# Apply the patch
+kubectl patch deployment $WORKLOAD_NAME --patch-file $DEST_FILE
 
 # Wait until the report is complete
 REPORT_ID=$(speedctl wait report --tag $BUILD_TAG --id-only --timeout 10m)
 REPORT=$(speedctl get report $REPORT_ID)
 
-# Cleanup the traffic replay CR
-git rm $DEST_FILE
-git commit -m "Cleaning up $DEST_FILE"
-git push origin master
-
-# Sync it with argo (again)
-argocd app sync podtato --prune
+# Cleanup the patch
+rm $DEST_FILE
 
 # Print the results
 echo "Report: https://app.speedscale.com/report/${REPORT_ID}"

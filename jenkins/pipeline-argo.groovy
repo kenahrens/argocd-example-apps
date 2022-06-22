@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         APP_URL = 'app.speedscale.com'
+        SNAPSHOT_ID = ''
         TENANT_ID = ''
         TENANT_NAME = ''
         TENANT_BUCKET = ''
@@ -23,13 +24,16 @@ pipeline {
                 sh 'echo "Installing jq"'
                 sh 'curl https://stedolan.github.io/jq/download/linux64/jq --output ~/.speedscale/jq'
                 sh 'chmod +x ~/.speedscale/jq'
+                sh 'which jq'
                 sh 'echo "Installing speedctl"'
                 sh './tools/create-config.sh'
                 sh 'sh -c "$(curl -sL https://downloads.speedscale.com/speedctl/install)"'
+                sh 'which speedctl'
                 sh 'echo "Installing argocd"'
                 sh 'curl -sSL https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64 --output ~/.speedscale/argocd'
                 sh 'chmod +x ~/.speedscale/argocd'
-                sh 'argocd login argocd-server.argocd.svc.cluster.local:443 --username admin --password ABCD123! --insecure'
+                sh 'which argocd'
+                sh 'argocd login argocd-server.argocd.svc.cluster.local:443 --username admin --password ARGO123! --insecure'
             }
         }
         stage('Replay') {
@@ -44,7 +48,7 @@ pipeline {
                     sh '''./tools/create-replay.sh \
                             --dest-dir podtato \
                             --workload-name podtato-head-entry \
-                            --snapshot-id a1b72cbd-cf47-4e3c-b9b9-b78f693dbcf6
+                            --snapshot-id $SNAPSHOT_ID
                         '''
                 }
             }
