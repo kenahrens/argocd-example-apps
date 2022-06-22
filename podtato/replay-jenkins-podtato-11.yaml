@@ -1,0 +1,12 @@
+apiVersion: speedscale.com/v1
+kind: TrafficReplay
+metadata:
+  name: replay-jenkins-podtato-11
+spec:
+  buildTag: "jenkins-podtato-11"
+  snapshotID: a1b72cbd-cf47-4e3c-b9b9-b78f693dbcf6
+  testConfigID: standard
+  workloadRef:
+    kind: Deployment
+    name: podtato-head-entry
+  cleanup: inventory
