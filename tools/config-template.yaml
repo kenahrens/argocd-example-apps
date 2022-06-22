@@ -5,7 +5,7 @@ contexts:
   loglevel: info
   container-registry: gcr.io/speedscale
   tenant: speedscale
-  app-url: app.speedscale.com
+  app-url: APP_URL
 tenants:
 - id: TENANT_ID
   name: TENANT_NAME
